@@ -18,7 +18,7 @@ if nargin<1 || isempty(hfs)
     hfs = findall(groot,'Type','figure');
 end
 if nargin<2 || isempty(screenFrac)
-    screenFrac = [1,1,1,1];
+    screenFrac = [0,0,1,1];
 end
 if nargin<3 || isempty(screenFrac)
     posArray = [];
@@ -48,7 +48,7 @@ end
 
 % position figures
 monPos = get(0).MonitorPositions(screenNumber,:);
-figArea = monPos.*screenFrac;
+figArea = [monPos(1:2)+screenFrac(1:2).*monPos(3:4) ,monPos(3:4).*screenFrac(3:4)];
 wx = figArea(3)/nx; wy = figArea(4)/ny;
 x = figArea(1); y = figArea(2)+figArea(4)-wy; 
 for i = 1:length(hfs)
