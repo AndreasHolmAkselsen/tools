@@ -5,7 +5,7 @@ function hfs = positionFigures(hfs,screenFrac,posArray,screenNumber,sortFigures)
 %
 %   INPUT
 %   hfs:          Figure handle array. Default: all available figures. 
-%   screenFrac:   [fx,fy,fwx,fwy]. Fraction of screen in which to place figures. Default: [1,1,1,1].
+%   screenFrac:   [fx,fy,fwx,fwy]. Fraction of screen in which to place figures. Values between 0 and 1. Default: [0,0,1,1].
 %   posArray:     [nx,ny]. Number of figures in each direction. Default: square distribution.
 %   screenNumber: Integer. Monitor number in case there are several. Default: 1.
 %   sortFigures:  Boolean. Whether to sort figures after figure number. Default: true.
@@ -30,7 +30,7 @@ if nargin<5 || isempty(sortFigures)
     sortFigures = true;
 end
 
-hfs(~isvalid(hfs)) = []; % remove handles to deleted fuigures
+hfs(~isgraphics(hfs)) = []; % remove handles to deleted fuigures
 if sortFigures
     [~,ii] = sort([hfs.Number]); hfs = hfs(ii);
 end
