@@ -7,8 +7,9 @@ function hfs = positionFigures(varargin)
 %   INPUT
 %   hfs:          Figure handle array. Default: all available figures. 
 %   OPTION NAMES  OPTION DESCRIPTION
-%   screenFrac:   [fx,fy,fwx,fwy]. Fraction of screen in which to place figures. Values between 0 and 1. Default: [0,0,1,1].
+%   screenFrac:   [fx,fy,fwx,fwy]. Fraction of screen in which to place figures. Values between 0 and 1. Default: [0,0,1,.95].
 %   posArray:     [ni,nj]. Number of figures in each direction. Default: square distribution.
+%   spacing:      [dx,dy]. Distance, relative to fwx and fwy, in between figures. Default: [0,0]
 %   screenNumber: Integer. Monitor number in case there are several. Default: 1.
 %   sortFigures:  Boolean. Whether to sort figures after figure number. Default: true.
 %   hideMenuBar:  Boolean. Sets figure property 'MenuBar' to 'none'. Default: false.
@@ -18,8 +19,9 @@ function hfs = positionFigures(varargin)
 
 %% set input
 % set defaults
-opt.screenFrac = [0,0,1,1];
-opt.posArray = [];
+opt.screenFrac = [0,0,1,.95];
+opt.posArray = []; % square division
+opt.spacing = [0,0];
 opt.screenNumber = 1;
 opt.sortFigures = true;
 opt.hideMenuBar = false;
@@ -36,7 +38,7 @@ hfs(~isgraphics(hfs)) = []; % remove handles to deleted fuigures
 
 % set flagged input options
 for i = 1:2:length(varargin)
-    assert(isfield(opt,varargin{i}),'Option ''%s'' not recognised.',varargin{i});
+    assert(isfield(opt,varargin{i}),'Option ''%s'' not recognised. Valid options are %s.',varargin{i},sprintf('''%s'',',string(fieldnames(opt))));
     opt.(varargin{i}) = varargin{i+1};
 end
 
@@ -72,14 +74,17 @@ end
 % position figures
 monPos = get(0).MonitorPositions(opt.screenNumber,:);
 figArea = [monPos(1:2)+screenFrac(1:2).*monPos(3:4) ,monPos(3:4).*screenFrac(3:4)];
-wx = figArea(3)/nj; wy = figArea(4)/ni;
+dx = opt.spacing(1)*figArea(3);
+dy = opt.spacing(2)*figArea(4);
+wx = figArea(3)/nj-dx*(1-1/nj); 
+wy = figArea(4)/ni-dy*(1-1/ni);
 x = figArea(1); y = figArea(2)+figArea(4)-wy; 
 for i = 1:length(hfs)
     hfs(i).Position = [x,y,wx,wy];
-    x = x+wx;
+    x = x+wx+dx;
     if x>= figArea(1)+figArea(3)
         x = figArea(1);
-        y = y-wy;
+        y = y-wy-dy;
     end
     figure(hfs(i));
 end
