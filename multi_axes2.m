@@ -4,7 +4,7 @@ function [h_ax,h_fig] = multi_axes2(n,m,h_fig,margin,sep)
 % sep = [sep_x,sep_y]
 
 if exist('h_fig','var') && ~isempty(h_fig)
-    figure(h_fig);
+    set(0, 'currentfigure', h_fig);
 else
     h_fig = figure;
     h_fig.Color = 'white';

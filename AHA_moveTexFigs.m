@@ -12,7 +12,8 @@ function AHA_moveTexFigs(inputTex,outputTex,figureOutputPath,REMOVE_COMMENT_LINE
 %
 % AHA, 2019, updated nov.2023.
 
-if nargin<=2 || isempty(figureOutputPath), figureOutputPath = [fileparts(outputTex),filesep,'figures',filesep]; end
+% if nargin<=2 || isempty(figureOutputPath), figureOutputPath = [fileparts(outputTex),filesep,'figures',filesep]; end
+if nargin<=2 || isempty(figureOutputPath), figureOutputPath = ['.',filesep,'figures',filesep]; end
 if nargin<=3, REMOVE_COMMENT_LINES = false; end
 if nargin<=4, additionalExtensions = {}; end
 
@@ -53,7 +54,7 @@ while ischar(tline)
         k2 = find( tline == '}' & k1 < size123 ,1,'first'  )-1;
         oldPath = tline(k1:k2);
         if oldPath(1) == '.', oldPath=[pathsRelativeTo,filesep,oldPath]; end
-        newpath = sprintf('%s/fig_%0.2d%s',figureOutputPath,count,strip(oldPath(end-3:end)));
+        newpath = sprintf('%sfig_%0.3d%s',figureOutputPath,count,strip(oldPath(end-3:end)));
         copyfile(oldPath,newpath);
         tline = [tline(1:k1-1),newpath,tline(k2+1:end)];
         for i = 1:length(additionalExtensions)
